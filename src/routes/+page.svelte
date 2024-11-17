@@ -1,7 +1,5 @@
 <script>
-    import CurveCycle from "$components/animation/PolarCurveCycle.svelte";
-    import Flower from "$components/animation/Flower.svelte";
+	import Parametric from "$components/animation/Parametric.svelte";
 </script>
 
-<!-- <CurveCycle /> -->
-<Flower />
+<Parametric animationName="flower" paramStart={0} paramEnd={6 * Math.PI + 0.1} strokeWidth={0.1} />
