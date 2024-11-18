@@ -1,46 +1,53 @@
+<!-- 
+A simple framework that animate equations by gradually changing one parameter
+     
+Author: Daniel (DanielZFLiu)
+-->
 <script lang="ts">
-    /**
-     * A simple framework that animates parametric equations
-     * by gradually changing one parameter
-     * 
-     * Author: Daniel (DanielZFLiu)
-     */
-
 	import { tweened } from 'svelte/motion';
-	import { cubicOut, linear, cubicInOut } from 'svelte/easing';
-	import { generateData, generatePathData, flower, roseCurve } from '$lib/animation';
+	import { cubicInOut } from 'svelte/easing';
+	import { generateData, generatePathData, animationMetadata } from '$lib/animation';
 	import { onMount } from 'svelte';
+
+	interface Props {
+		animationName: keyof typeof animationMetadata;
+		paramStart: number;
+		paramEnd: number;
+		easing?: (t: number) => number;
+		duration?: number;
+		height?: number;
+		width?: number;
+		resoluton?: number;
+		strokeWidth?: number;
+		strokeColor?: string;
+		bgColor?: string;
+	}
 
 	let {
 		animationName,
         paramStart,
         paramEnd,
+		easing = cubicInOut,
 		duration = 6000,
 		height = 500,
 		width = 500,
 		resoluton = 2000,
 		strokeWidth = 0.01,
-		strokeColor = 'black'
-	} = $props();
+		strokeColor = 'black',
+		bgColor = "none"
+	}: Props = $props();
+
 	let metaData: {
 		generator: (proportion: number, param: number) => { x: number; y: number };
 		viewBox: string;
-	} = $state(flower);
-	let param = tweened(paramStart, { duration, easing: cubicInOut});
+	} = $state(animationMetadata.flower);
+
+	let param = tweened(paramStart, { duration, easing });
 	let data: { x: number; y: number }[] = $state([]);
 	let pathData: string = $state('');
 
 	$effect(() => {
-		switch (animationName) {
-			case 'flower':
-				metaData = flower;
-				break;
-			case 'roseCurve':
-				metaData = roseCurve;
-				break;
-			default:
-				metaData = flower;
-		}
+		metaData = animationMetadata[animationName];
 	});
 
 	$effect(() => {
@@ -57,5 +64,5 @@
 </script>
 
 <svg {width} {height} viewBox={metaData.viewBox} style="border: solid 1px red;">
-	<path d={pathData} fill="none" stroke={strokeColor} stroke-width={strokeWidth} />
+	<path d={pathData} fill={bgColor} stroke={strokeColor} stroke-width={strokeWidth} />
 </svg>

@@ -1,6 +1,5 @@
 /**
- * A simple framework that animates parametric equations
- * by gradually changing one parameter
+ * A simple framework that animate equations by gradually changing one parameter
  * 
  * Author: Daniel (DanielZFLiu)
  */
@@ -13,13 +12,13 @@
  * generates data points for a parametric equation
  */
 export function generateData(param: number,
-    xyGenerator: (proportion: number, param: number) => { x: number; y: number },
+    xyGenerator: (progression: number, param: number) => { x: number; y: number },
     numPoints: number = 2000): { x: number; y: number }[] {
     const data = [];
     for (let i = 0; i <= numPoints; i++) {
-        let proportion = i / numPoints;
+        let progression = i / numPoints;
         data.push(
-            xyGenerator(proportion, param)
+            xyGenerator(progression, param)
         );
     }
     return data;
@@ -42,21 +41,16 @@ export function generatePathData(data: { x: number; y: number }[]): string {
 // Generator Functions & Animation Metadata
 // ==============================
 
-function flowerGenerator(proportion: number, param: number): { x: number; y: number } {
-    let partialParam = param * proportion;
+function flowerGenerator(progression: number, param: number): { x: number; y: number } {
+    let theta = param * progression;
     return {
-        x: 8 * Math.cos(partialParam) - 6 * Math.cos((8 * partialParam) / 3),
-        y: 8 * Math.sin(partialParam) - 6 * Math.sin((8 * partialParam) / 3)
+        x: 8 * Math.cos(theta) - 6 * Math.cos((8 * theta) / 3),
+        y: 8 * Math.sin(theta) - 6 * Math.sin((8 * theta) / 3)
     }
 }
 
-export let flower = {
-    generator: flowerGenerator,
-    viewBox: "-25 -25 50 50"
-}
-
-function roseCurveGenerator(proportion: number, param: number): { x: number; y: number } {
-    let theta = proportion * 4 * Math.PI;
+function roseCurveGenerator(progression: number, param: number): { x: number; y: number } {
+    let theta = progression * 4 * Math.PI;
     let r = Math.sin((param / 5) * theta);
     return {
         x: r * Math.cos(theta),
@@ -64,9 +58,79 @@ function roseCurveGenerator(proportion: number, param: number): { x: number; y: 
     }
 }
 
-export let roseCurve = {
-    generator: roseCurveGenerator,
-    viewBox: "-2 -2 4 4"
+function butterflyGenerator(progression: number, param: number): { x: number; y: number } {
+    let theta = progression * param;
+    let r = Math.exp(Math.sin(theta)) - 2 * Math.cos(4 * theta) + Math.pow(Math.sin((2 * theta - Math.PI) / 24), 5);
+    return {
+        x: r * Math.cos(theta),
+        y: -r * Math.sin(theta)
+    }
 }
 
-// TODO: add generator for r = exp(sin(t)) - 2cos(4t) + sin^5((4t - pi)/24)
+function portalGenerator(progression: number, param: number): { x: number; y: number } {
+    let theta = progression * param;
+    let r = 20 * (Math.tan(17 * theta) + 1 / (Math.tan(17 * theta) + 1e-10));
+    return {
+        x: r * Math.cos(theta),
+        y: r * Math.sin(theta)
+    }
+}
+
+function donutGenerator(progression: number, param: number): { x: number; y: number } {
+    let theta = progression * param;
+    let r = 4 * Math.sin(24 * theta / 25) + 10;
+    return {
+        x: r * Math.cos(theta),
+        y: r * Math.sin(theta)
+    }
+}
+
+function darknessGenerator(progression: number, param: number): { x: number; y: number } {
+    let t = progression * param;
+    let r = Math.cos(26 * t);
+    let theta = 26 * Math.sin(26 * t);
+    return {
+        x: r * Math.cos(theta),
+        y: r * Math.sin(theta)
+    }
+}
+
+function spikeLoadGenerator(progression: number, param: number): { x: number; y: number } {
+    let theta = progression * param;
+    let r = Math.exp(Math.sin(theta)) - 2 * Math.cos(4 * theta) + Math.pow(Math.sin((4 * theta - Math.PI) / 24), 5);
+    return {
+        x: r * Math.cos(progression * Math.PI),
+        y: r * Math.sin(progression * Math.PI)
+    }
+}
+
+export let animationMetadata = {
+    flower: {
+        generator: flowerGenerator,
+        viewBox: "-25 -25 50 50"
+    },
+    roseCurve: {
+        generator: roseCurveGenerator,
+        viewBox: "-2 -2 4 4"
+    },
+    butterfly: {
+        generator: butterflyGenerator,
+        viewBox: "-5 -5 10 10"
+    },
+    portal: {
+        generator: portalGenerator,
+        viewBox: "-5 -5 10 10"
+    },
+    donut: {
+        generator: donutGenerator,
+        viewBox: "-17.5 -17.5 35 35"
+    },
+    darkness: {
+        generator: darknessGenerator,
+        viewBox: "-1 -1 2 2"
+    },
+    spikeLoad: {
+        generator: spikeLoadGenerator,
+        viewBox: "-5 -5 10 10"
+    }
+}
