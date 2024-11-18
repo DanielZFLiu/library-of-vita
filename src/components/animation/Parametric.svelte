@@ -63,6 +63,6 @@ Author: Daniel (DanielZFLiu)
     });
 </script>
 
-<svg {width} {height} viewBox={metaData.viewBox} style="border: solid 1px red;">
+<svg {width} {height} viewBox={metaData.viewBox}>
 	<path d={pathData} fill={bgColor} stroke={strokeColor} stroke-width={strokeWidth} />
 </svg>
