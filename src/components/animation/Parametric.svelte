@@ -1,5 +1,5 @@
 <!-- 
-A simple framework that animate equations by gradually changing one parameter
+A simple framework that animate parametric equations by gradually changing one parameter
      
 Author: Daniel (DanielZFLiu)
 -->
