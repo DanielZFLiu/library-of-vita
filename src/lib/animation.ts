@@ -95,12 +95,12 @@ function darknessGenerator(progression: number, param: number): { x: number; y: 
     }
 }
 
-function spikeLoadGenerator(progression: number, param: number): { x: number; y: number } {
+function radiantBookGenerator(progression: number, param: number): { x: number; y: number } {
     let theta = progression * param;
     let r = Math.exp(Math.sin(theta)) - 2 * Math.cos(4 * theta) + Math.pow(Math.sin((4 * theta - Math.PI) / 24), 5);
     return {
         x: r * Math.cos(progression * Math.PI),
-        y: r * Math.sin(progression * Math.PI)
+        y: -r * Math.sin(progression * Math.PI)
     }
 }
 
@@ -111,7 +111,7 @@ export let animationMetadata = {
     },
     roseCurve: {
         generator: roseCurveGenerator,
-        viewBox: "-2 -2 4 4"
+        viewBox: "-1.5 -1.5 3 3"
     },
     butterfly: {
         generator: butterflyGenerator,
@@ -129,8 +129,8 @@ export let animationMetadata = {
         generator: darknessGenerator,
         viewBox: "-1 -1 2 2"
     },
-    spikeLoad: {
-        generator: spikeLoadGenerator,
+    radiantBook: {
+        generator: radiantBookGenerator,
         viewBox: "-5 -5 10 10"
     }
 }
