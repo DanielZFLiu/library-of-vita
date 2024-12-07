@@ -1,10 +1,12 @@
 <script>
 	import Parametric from '$components/animation/Parametric.svelte';
+	import BookShelf from '$components/book/BookShelf.svelte';
 	import ZoomPanCanvas from '$components/ZoomPanCanvas.svelte';
 	import { cubicIn } from 'svelte/easing';
+	import shelfData from '$lib/shelfData.json';
 </script>
 
-<ZoomPanCanvas>
+<!-- <ZoomPanCanvas>
 	<Parametric
 		animationName="portal"
 		paramStart={0}
@@ -16,4 +18,7 @@
 		easing={cubicIn}
 		bgColor={'#FFFFF0'}
 	/>
-</ZoomPanCanvas>
+</ZoomPanCanvas> -->
+<ZoomPanCanvas>
+	<BookShelf data={shelfData.projects}></BookShelf></ZoomPanCanvas
+>
