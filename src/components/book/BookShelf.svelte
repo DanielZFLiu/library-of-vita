@@ -1,14 +1,12 @@
 <script lang="ts">
-	let {
-		data
-	}: {
-		data: {
-			shelves: Array<shelf>;
-			svg: string;
-			width: number;
-			height: number;
-		};
-	} = $props();
+	let { data }: { data: bookshelf } = $props();
+
+	interface bookshelf {
+		shelves: Array<shelf>;
+		svg: string;
+		width: number;
+		height: number;
+	}
 
 	interface shelf {
 		x: number;

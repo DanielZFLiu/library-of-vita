@@ -6,19 +6,21 @@
 	import shelfData from '$lib/shelfData.json';
 </script>
 
-<!-- <ZoomPanCanvas>
-	<Parametric
-		animationName="portal"
-		paramStart={0}
-		paramEnd={2 * Math.PI + 1}
-		strokeWidth={0.01}
-		width={'100vw'}
-		height={'100vh'}
-		duration={3000}
-		easing={cubicIn}
-		bgColor={'#FFFFF0'}
-	/>
-</ZoomPanCanvas> -->
 <ZoomPanCanvas>
+	{#snippet content()}
+		<Parametric
+			animationName="portal"
+			paramStart={0}
+			paramEnd={2 * Math.PI + 1}
+			strokeWidth={0.01}
+			width={'100vw'}
+			height={'100vh'}
+			duration={3000}
+			easing={cubicIn}
+			bgColor={'#FFFFF0'}
+		/>
+	{/snippet}
+</ZoomPanCanvas>
+<!-- <ZoomPanCanvas>
 	<BookShelf data={shelfData.projects}></BookShelf></ZoomPanCanvas
->
+> -->
