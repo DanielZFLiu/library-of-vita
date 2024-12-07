@@ -1,0 +1,25 @@
+{
+    "projects": {
+        "svg": "/images/bookshelf-bg.svg",
+        "shelves": [
+          {
+            "x": 50,
+            "y": 100,
+            "width": 400,
+            "height": 30,
+            "rotation": 0,
+            "flipped": false,
+            "books": [
+              {
+                "link": "https://example.com/book1",
+                "svg": "/images/bookshelf-bg.svg",
+                "width": 20,
+                "height": 100
+              }
+            ]
+          }
+        ],
+        "width": 500,
+        "height": 200
+    }
+}

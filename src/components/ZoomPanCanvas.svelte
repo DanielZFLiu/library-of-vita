@@ -1,6 +1,6 @@
 <!-- A container that allows zoom and panning for things inside it -->
 <script>
-	import { onDestroy, onMount } from 'svelte';
+	import { onMount } from 'svelte';
 
 	let isCtrlPressed = false;
 	let scale = 1;
