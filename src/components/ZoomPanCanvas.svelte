@@ -8,7 +8,7 @@
 	}
 
 	let {
-		upperLimit = 5,
+		upperLimit = 10,
 		lowerLimit = 0.5,
 		content
 	}: { upperLimit?: number; lowerLimit?: number; content: Snippet } = $props();

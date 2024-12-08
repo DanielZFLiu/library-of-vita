@@ -1,4 +1,5 @@
 <script lang="ts">
+	// put cover, spine, and shelf folder in the book folder in static
 	let { data }: { data: bookshelf } = $props();
 
 	interface bookshelf {
