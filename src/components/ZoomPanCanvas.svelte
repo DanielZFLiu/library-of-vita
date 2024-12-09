@@ -10,15 +10,24 @@
 	let {
 		upperLimit = 10,
 		lowerLimit = 0.5,
-		content
-	}: { upperLimit?: number; lowerLimit?: number; content: Snippet } = $props();
+		content,
+		position = $bindable(),
+		scale = $bindable(),
+		trigger = $bindable()
+	}: {
+		upperLimit?: number;
+		lowerLimit?: number;
+		content: Snippet;
+		position: Point;
+		scale: number;
+		trigger?: boolean;
+	} = $props();
 
 	let isCtrlPressed: boolean = false;
-	let scale: number = $state(1);
-	let position: Point = $state({ x: 0, y: 0 });
 	let isPanning: boolean = $state(false);
 	let startPoint: Point = { x: 0, y: 0 };
 	let panStart: Point = { x: 0, y: 0 };
+	let canvas: HTMLDivElement;
 
 	onMount(() => {
 		window.addEventListener('keydown', onKeyDown);
@@ -27,6 +36,17 @@
 			window.removeEventListener('keydown', onKeyDown);
 			window.removeEventListener('keyup', onKeyUp);
 		};
+	});
+
+	$effect(() => {
+		if (trigger) {
+			canvas.style.transition = 'transform 3s';
+			console.log('triggered');
+			setTimeout(() => {
+				canvas.style.transition = 'none';
+				trigger = false;
+			}, 3500);
+		}
 	});
 
 	function onKeyDown(event: KeyboardEvent) {
@@ -42,7 +62,7 @@
 	}
 
 	function onWheel(event: WheelEvent) {
-		if (isCtrlPressed) {
+		if (isCtrlPressed && !trigger) {
 			event.preventDefault();
 			const delta = event.deltaY < 0 ? 1.1 : 0.9;
 			const mouseX = event.clientX;
@@ -72,7 +92,7 @@
 	}
 
 	function onMouseMove(event: MouseEvent) {
-		if (isPanning) {
+		if (isPanning && !trigger) {
 			event.preventDefault();
 			const dx = event.clientX - startPoint.x;
 			const dy = event.clientY - startPoint.y;
@@ -104,7 +124,11 @@
 	onmouseup={onMouseUp}
 	onmouseleave={onMouseLeave}
 >
-	<div class="content" style="transform: translate({position.x}px, {position.y}px) scale({scale})">
+	<div
+		bind:this={canvas}
+		class="content"
+		style="transform: translate({position.x}px, {position.y}px) scale({scale})"
+	>
 		{@render content()}
 	</div>
 </div>
@@ -119,6 +143,7 @@
 
 	.content {
 		transform-origin: 0 0;
+		/* transition: transform 1s; */
 	}
 
 	.panning {

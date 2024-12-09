@@ -4,7 +4,7 @@
 	import { cubicInOut } from 'svelte/easing';
 
 	let {
-		delayInSeconds = 3.5,
+		delayInSeconds = 3,
 		zoomScale = 10,
 		durationInSeconds = 2,
 		content
