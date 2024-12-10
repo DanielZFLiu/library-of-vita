@@ -70,13 +70,6 @@ Author: Daniel (DanielZFLiu)
 </svg>
 
 <style>
-	svg{
-		transition: background-color 5s;
-	}
-
-	path {
-		transition: stroke 5s;
-	}
 </style>
 
 <!-- Example Use -->

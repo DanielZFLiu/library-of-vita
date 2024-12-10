@@ -15,11 +15,13 @@
 	import { onMount } from 'svelte';
 	import Sun from '$components/svg/Sun.svelte';
 	import Moon from '$components/svg/Moon.svelte';
+	import LightDark from '$components/animation/LightDark.svelte';
 
 	let animationStage = $state(0);
 	let timeouts: number[] = [];
 	let showSkipInstructions = $state(false);
 	let lightMode = $state(false);
+	let showDarknessAnimation = $state(false);
 
 	// let position = $state({ x: 0, y: 0 });
 	// let scale = $state(1);
@@ -47,7 +49,6 @@
 				animationStage = 1;
 			}, 4500)
 		);
-
 		timeouts.push(
 			setTimeout(() => {
 				animationStage = 2;
@@ -56,12 +57,12 @@
 		);
 
 		// check if its light mode
-		// if (localStorage.getItem('lightMode') === 'true') {
-		// 	console.log('light mode');
-		// 	lightMode = true;
-		// } else {
-		// 	lightMode = false;
-		// }
+		if (localStorage.getItem('lightMode') === 'true') {
+			lightMode = true;
+		} else {
+			lightMode = false;
+		}
+		document.documentElement.style.setProperty('color-scheme', lightMode ? 'light' : 'dark');
 	});
 
 	function finishInitialAnimation() {
@@ -81,13 +82,14 @@
 		}
 	}
 
-	let bgColor = $state("#1B1B1B");
-	let strokeColor = $state("#FFFFF");
 	function switchLightMode() {
 		lightMode = !lightMode;
-		// setTimeout(() => {
-		// 	document.documentElement.style.setProperty('color-scheme', lightMode ? 'light' : 'dark');
-		// }, 500);
+		document.documentElement.style.setProperty('color-scheme', lightMode ? 'light' : 'dark');
+		showDarknessAnimation = true;
+		setTimeout(() => {
+			showDarknessAnimation = false;
+		}, 4500);
+		localStorage.setItem('lightMode', lightMode ? 'true' : 'false');
 	}
 </script>
 
@@ -151,48 +153,17 @@
 {/if}
 
 <!-- animation stage 3: show bookshelves and navbar -->
-<!-- {#if animationStage == 3}
-	{#key lightMode}
-		<button
-			class="theme-button"
-			transition:blur={{ duration: 500 }}
-			onclick={switchLightMode}
-		>
-			{#if lightMode}
-				<Sun></Sun>
-			{:else}
-				<Moon></Moon>
-			{/if}
-		</button>
-	{/key}
-{/if} -->
 {#if animationStage == 3}
-	<button
-		class="theme-button"
-		in:blur={{ delay: 500, duration: 500 }}
-		out:blur={{ duration: 500 }}
-		onclick={switchLightMode}
-	>
+	<button class="theme-button" in:blur={{ delay: 500, duration: 500 }} onclick={switchLightMode}>
 		{#if lightMode}
-			<Sun></Sun>
-		{:else}
 			<Moon></Moon>
+		{:else}
+			<Sun></Sun>
 		{/if}
 	</button>
 
-	{#if lightMode == true}
-		<Parametric
-			animationName="darkness"
-			paramStart={0}
-			paramEnd={111}
-			strokeWidth={0.001}
-			width={'100vw'}
-			height={'40vw'}
-			resoluton={8000}
-			duration={6000}
-			bgColor={'var(--primary-bg)'}
-			strokeColor={'var(--primary-contrast)'}
-		/>
+	{#if showDarknessAnimation}
+		<LightDark {lightMode}></LightDark>
 	{/if}
 {/if}
 
@@ -326,8 +297,5 @@
 
 		// user interaction
 		cursor: pointer;
-
-		// animation
-		// animation: fadeIn 500ms 1s forwards;
 	}
 </style>
