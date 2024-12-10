@@ -69,6 +69,16 @@ Author: Daniel (DanielZFLiu)
 	<path d={pathData} {fill} stroke={strokeColor} stroke-width={strokeWidth} />
 </svg>
 
+<style>
+	svg{
+		transition: background-color 5s;
+	}
+
+	path {
+		transition: stroke 5s;
+	}
+</style>
+
 <!-- Example Use -->
 <!-- <Parametric animationName="flower" paramStart={0} paramEnd={6 * Math.PI + 0.1} strokeWidth={0.1} /> -->
 <!-- <Parametric animationName="roseCurve" paramStart={0} paramEnd={10} width={1000} height={1000} strokeWidth={0.01} duration={4000}/> -->
