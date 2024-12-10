@@ -143,7 +143,6 @@
 
 	.content {
 		transform-origin: 0 0;
-		/* transition: transform 1s; */
 	}
 
 	.panning {

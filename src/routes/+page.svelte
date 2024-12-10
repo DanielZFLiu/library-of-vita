@@ -10,11 +10,11 @@
 	import ZoomPanCanvas from '$components/ZoomPanCanvas.svelte';
 	import { cubicIn } from 'svelte/easing';
 	import { blur, fade, fly } from 'svelte/transition';
-	import shelfData from '$lib/shelfData.json';
+	import { shelfData } from '$lib/ShelfData.svelte';
 	import Zooming from '$components/animation/Zooming.svelte';
 	import { onMount } from 'svelte';
-	import Sun from '$components/svg/Sun.svelte';
-	import Moon from '$components/svg/Moon.svelte';
+	import Sun from '$components/svg/themeButton/Sun.svelte';
+	import Moon from '$components/svg/themeButton/Moon.svelte';
 	import LightDark from '$components/animation/LightDark.svelte';
 
 	let animationStage = $state(0);
@@ -22,10 +22,10 @@
 	let showSkipInstructions = $state(false);
 	let lightMode = $state(false);
 	let showDarknessAnimation = $state(false);
-
-	// let position = $state({ x: 0, y: 0 });
-	// let scale = $state(1);
-	// let trigger = $state(false);
+	let navMode = $state('');
+	let position = $state({ x: 0, y: 0 });
+	let scale = $state(1);
+	let trigger = $state(false);
 
 	onMount(() => {
 		// setTimeout(() => {
@@ -88,11 +88,16 @@
 		showDarknessAnimation = true;
 		setTimeout(() => {
 			showDarknessAnimation = false;
-		}, 4500);
+		}, 4300);
 		localStorage.setItem('lightMode', lightMode ? 'true' : 'false');
+	}
+
+	function navbarClick(item: string) {
+		navMode = item;
 	}
 </script>
 
+<!-- skip animation instructions -->
 {#if showSkipInstructions}
 	<div
 		class="skip-instructions"
@@ -103,8 +108,8 @@
 	</div>
 {/if}
 
+<!-- animation stage 0: portal & zooming -->
 {#if animationStage == 0}
-	<!-- animation stage 0: portal & zooming -->
 	<div out:blur={{ duration: 500 }}>
 		<Zooming>
 			{#snippet content()}
@@ -123,8 +128,9 @@
 			{/snippet}
 		</Zooming>
 	</div>
-{:else if animationStage == 1 || animationStage == 2}
+
 	<!-- animation stage 1: title animation -->
+{:else if animationStage == 1 || animationStage == 2}
 	<div class="logo" out:fly={{ y: -40, duration: 1000 }}>
 		<Parametric
 			animationName="radiantBook"
@@ -153,48 +159,51 @@
 {/if}
 
 <!-- animation stage 3: show bookshelves and navbar -->
+{#snippet navButton(name: string)}
+	<button
+		onclick={() => {
+			navbarClick(name);
+		}}
+		style="text-decoration: {navMode === name ? 'underline' : 'none'};"
+	>
+		{name}
+	</button>
+{/snippet}
+
 {#if animationStage == 3}
 	{#if showDarknessAnimation}
 		<LightDark {lightMode}></LightDark>
 	{/if}
 
-	<button class="theme-button" in:blur={{ delay: 500, duration: 500 }} onclick={switchLightMode}>
-		{#if lightMode}
-			<Moon></Moon>
-		{:else}
-			<Sun></Sun>
-		{/if}
-	</button>
+	<div class="zoom-pan-container">
+		<ZoomPanCanvas bind:position bind:scale bind:trigger>
+			{#snippet content()}
+				<div class="writings">
+					<BookShelf data={shelfData['Writings']}></BookShelf>
+				</div>
+				<div class="projects">
+					<BookShelf data={shelfData['Projects']}></BookShelf>
+				</div>
+			{/snippet}
+		</ZoomPanCanvas>
 
-	<div class="navbar" in:blur={{ delay: 500, duration: 500 }} >
-		<button>
-			Writings
+		<button class="theme-button" in:blur={{ delay: 500, duration: 500 }} onclick={switchLightMode}>
+			{#if lightMode}
+				<Moon></Moon>
+			{:else}
+				<Sun></Sun>
+			{/if}
 		</button>
 
-		<pre> | </pre>
+		<div class="navbar" in:blur={{ delay: 500, duration: 500 }}>
+			{@render navButton('Writings')}
 
-		<button>
-			Projects
-		</button>
+			<pre> | </pre>
+
+			{@render navButton('Projects')}
+		</div>
 	</div>
 {/if}
-
-<!-- <ZoomPanCanvas bind:position bind:scale bind:trigger>
-	{#snippet content()}
-		<Parametric
-			animationName="portal"
-			paramStart={0}
-			paramEnd={2 * Math.PI + 1}
-			strokeWidth={0.01}
-			width={'100vw'}
-			height={'100vh'}
-			duration={3000}
-			easing={cubicIn}
-			bgColor={'var(--primary-bg)'}
-			strokeColor={'var(--primary-contrast)'}
-		/>
-	{/snippet}
-</ZoomPanCanvas> -->
 
 <style lang="scss">
 	.skip-instructions {
@@ -321,5 +330,27 @@
 
 		// font
 		font-size: 18px;
+
+		// user interaction
+		user-select: none;
+
+		button {
+			cursor: pointer;
+		}
+	}
+
+	.zoom-pan-container {
+		width: 100vw;
+		height: 100vh;
+
+		.writings{
+			position: absolute;
+			left: 20vw;
+		}
+
+		.projects{
+			position: absolute;
+			right: 20vw;
+		}
 	}
 </style>

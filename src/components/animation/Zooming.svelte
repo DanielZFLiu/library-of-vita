@@ -5,7 +5,7 @@
 
 	let {
 		delayInSeconds = 3,
-		zoomScale = 10,
+		zoomScale = 11,
 		durationInSeconds = 2,
 		content
 	}: {

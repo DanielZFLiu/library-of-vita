@@ -22,6 +22,7 @@ body {
 
     /* animation */
     /* transition: background-color 0.5s, color 0.5s; */
+    transition: background-color 1s;
 }
 
 button{

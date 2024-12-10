@@ -1,10 +1,10 @@
 <script lang="ts">
-	// put cover, spine, and shelf folder in the book folder in static
-	let { data }: { data: bookshelf } = $props();
+	import type { Component } from 'svelte';
 
+	let { data }: { data: bookshelf } = $props();
 	interface bookshelf {
 		shelves: Array<shelf>;
-		svg: string;
+		svg: Component;
 		width: number;
 		height: number;
 	}
@@ -20,7 +20,7 @@
 	}
 
 	interface book {
-		svg: string;
+		svg: Component;
 		width: number;
 		height: number;
 		link: string;
@@ -29,16 +29,16 @@
 	function onBookClick(link: string) {
 		window.open(link, '_blank');
 	}
+
+	const BookshelfBg = $derived(data.svg);
 </script>
 
 {#if data}
 	<div class="bookshelf" style="width:{data.width}px; height:{data.height}px;">
-		<img
-			class="bookshelf-bg"
-			src={data.svg}
-			style="width:{data.width}px; height:{data.height}px;"
-			alt="Bookshelf"
-		/>
+		<!-- bookshelf background -->
+		<div class="bookshelf-bg">
+			<BookshelfBg width={data.width} height={data.height}></BookshelfBg>
+		</div>
 
 		<!-- Render each shelf -->
 		{#each data.shelves as shelf}
@@ -60,11 +60,11 @@
 						role="button"
 						tabindex="0"
 					>
-						<img
-							src={book.svg}
-							style="width: {book.width}px; height:{book.height}px;"
-							alt="Book Spine"
-						/>
+						{#snippet spine(Comp: Component, width: number, height: number)}
+							<Comp width={`${width}px`} height={`${height}px`}></Comp>
+						{/snippet}
+
+						{@render spine(book.svg, book.width, book.height)}
 					</div>
 				{/each}
 			</div>
@@ -75,7 +75,6 @@
 <style lang="scss">
 	.bookshelf {
 		position: relative;
-		border: solid 1px red;
 
 		.bookshelf-bg {
 			position: absolute;
@@ -85,13 +84,11 @@
 
 		.shelf {
 			position: absolute;
-			border: solid 1px green;
 			display: flex;
 			align-items: flex-end;
 
 			.bookspine {
 				cursor: pointer;
-				border: solid 1px red;
 			}
 		}
 	}
