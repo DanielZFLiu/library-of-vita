@@ -154,6 +154,10 @@
 
 <!-- animation stage 3: show bookshelves and navbar -->
 {#if animationStage == 3}
+	{#if showDarknessAnimation}
+		<LightDark {lightMode}></LightDark>
+	{/if}
+
 	<button class="theme-button" in:blur={{ delay: 500, duration: 500 }} onclick={switchLightMode}>
 		{#if lightMode}
 			<Moon></Moon>
@@ -162,12 +166,18 @@
 		{/if}
 	</button>
 
-	{#if showDarknessAnimation}
-		<LightDark {lightMode}></LightDark>
-	{/if}
-{/if}
+	<div class="navbar" in:blur={{ delay: 500, duration: 500 }} >
+		<button>
+			Writings
+		</button>
 
-<!-- <div class="navbar"></div> -->
+		<pre> | </pre>
+
+		<button>
+			Projects
+		</button>
+	</div>
+{/if}
 
 <!-- <ZoomPanCanvas bind:position bind:scale bind:trigger>
 	{#snippet content()}
@@ -297,5 +307,19 @@
 
 		// user interaction
 		cursor: pointer;
+	}
+
+	.navbar {
+		// position
+		position: absolute;
+		top: 0;
+		left: 50%;
+		transform: translate(-50%, 0%);
+
+		// inner
+		display: flex;
+
+		// font
+		font-size: 18px;
 	}
 </style>
