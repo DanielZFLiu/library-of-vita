@@ -1,9 +1,3 @@
-<!-- todo
-1. enable ability to jump ahead through animation [v]
-2. add dark / light mode switch
-3. add bookshelves 
--->
-
 <script lang="ts">
 	import Parametric from '$components/animation/Parametric.svelte';
 	import BookShelf from '$components/book/BookShelf.svelte';

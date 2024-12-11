@@ -17,13 +17,13 @@
 					flipped: false,
 					books: [
 						{
-							link: 'https://example.com/book1',
+							link: 'https://www.voithoslabs.com/',
 							svg: VNote,
 							width: 16,
 							height: 67
 						},
 						{
-							link: 'https://example.com/book2',
+							link: 'https://www.epochdesign.dev/',
 							svg: Epoch,
 							width: 16,
 							height: 60
