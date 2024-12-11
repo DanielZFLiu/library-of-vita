@@ -16,6 +16,7 @@
 	import Sun from '$components/svg/themeButton/Sun.svelte';
 	import Moon from '$components/svg/themeButton/Moon.svelte';
 	import LightDark from '$components/animation/LightDark.svelte';
+	import SofaChair from '$components/svg/SofaChair.svelte';
 
 	let animationStage = $state(0);
 	let timeouts: number[] = [];
@@ -26,14 +27,11 @@
 	let position = $state({ x: 0, y: 0 });
 	let scale = $state(1);
 	let trigger = $state(false);
+	let panned = $state(false);
+	let zoomed = $state(false);
+	let navAnimationPlaying = $state(false);
 
 	onMount(() => {
-		// setTimeout(() => {
-		// 	scale = 5;
-		// 	position = { x: 500, y: 500 };
-		// 	trigger = true;
-		// }, 3500);
-
 		// check if the animation has been played before
 		if (localStorage.getItem('playedAnimation') === 'true') {
 			showSkipInstructions = true;
@@ -59,10 +57,18 @@
 		// check if its light mode
 		if (localStorage.getItem('lightMode') === 'true') {
 			lightMode = true;
-		} else {
-			lightMode = false;
 		}
+
 		document.documentElement.style.setProperty('color-scheme', lightMode ? 'light' : 'dark');
+
+		// check if need to show pan / zoom instructions
+		if (localStorage.getItem('panned') === 'true') {
+			panned = true;
+		}
+
+		if (localStorage.getItem('zoomed') === 'true') {
+			zoomed = true;
+		}
 	});
 
 	function finishInitialAnimation() {
@@ -92,8 +98,83 @@
 		localStorage.setItem('lightMode', lightMode ? 'true' : 'false');
 	}
 
+	function getElementPosition(id: string) {
+		const element = document.getElementById(id);
+
+		if (!element) {
+			return null;
+		}
+
+		const rect = element.getBoundingClientRect();
+		return {
+			top: rect.top,
+			left: rect.left,
+			width: rect.width,
+			height: rect.height
+		};
+	}
+
 	function navbarClick(item: string) {
+		// check if nav animation is playing
+		if (navAnimationPlaying) return;
+		navAnimationPlaying = true;
+		setTimeout(() => {
+			navAnimationPlaying = false;
+		}, 2050);
+
+		// set highlighted item
 		navMode = item;
+
+		function goToItem(chosenItem: string) {
+			const pos = getElementPosition(chosenItem);
+			if (!pos) return;
+
+			// element center
+			const elementCenterX = pos.left + pos.width / 2;
+			const elementCenterY = pos.top + pos.height / 2;
+
+			// viewport center
+			const viewportCenterX = window.innerWidth / 2;
+			const viewportCenterY = window.innerHeight / 2;
+
+			// desired scale
+			scale = 1.5;
+
+			// reposition so the chosen element ends up at the center
+			position = {
+				x: viewportCenterX - elementCenterX * scale,
+				y: viewportCenterY - elementCenterY * scale
+			};
+
+			trigger = true;
+		}
+
+		// check if we are already centered
+		const isCentered = scale === 1 && position.x === 0 && position.y === 0;
+		if (!isCentered) {
+			// return to the center of the viewport
+			scale = 1;
+			position = { x: 0, y: 0 };
+			trigger = true;
+
+			// wait before triggering the next animation
+			setTimeout(() => {
+				goToItem(item);
+			}, 1050);
+		} else {
+			// already centered, go directly
+			goToItem(item);
+		}
+	}
+
+	function onPan() {
+		panned = true;
+		localStorage.setItem('panned', 'true');
+	}
+
+	function onZoom() {
+		zoomed = true;
+		localStorage.setItem('zoomed', 'true');
 	}
 </script>
 
@@ -104,7 +185,7 @@
 		in:blur={{ delay: 500, duration: 1000 }}
 		out:blur={{ duration: 750 }}
 	>
-		<p>Press Enter to skip</p>
+		<p>Press Enter to Skip</p>
 	</div>
 {/if}
 
@@ -176,13 +257,36 @@
 	{/if}
 
 	<div class="zoom-pan-container">
-		<ZoomPanCanvas bind:position bind:scale bind:trigger>
-			{#snippet content()}
-				<div class="writings" in:blur={{delay: 500, duration: 500}}>
-					<BookShelf data={shelfData['Writings']}></BookShelf>
+		<div class="canvas-instructions" in:blur={{ delay: 500, duration: 500 }}>
+			{#if !panned}
+				<div class="pan-instruction" out:blur={{ duration: 500 }}>
+					(Press scroll key or right click) & drag to pan.
 				</div>
-				<div class="projects" in:blur={{delay: 500, duration: 500}}>
-					<BookShelf data={shelfData['Projects']}></BookShelf>
+			{/if}
+			<br />
+			{#if !zoomed}
+				<div class="zoom-instruction" out:blur={{ duration: 500 }}>Ctrl + scroll to zoom.</div>
+			{/if}
+		</div>
+
+		<ZoomPanCanvas bind:position bind:scale bind:trigger {onPan} {onZoom}>
+			{#snippet content()}
+				<div class="bookshelves-container" in:blur={{ delay: 500, duration: 500 }}>
+					<div class="writings" id="Writings">
+						<BookShelf data={shelfData['Writings']}></BookShelf>
+					</div>
+
+					<div class="chair-cover1 chair-cover"></div>
+
+					<div class="chair">
+						<SofaChair></SofaChair>
+					</div>
+
+					<div class="chair-cover2 chair-cover"></div>
+
+					<div class="projects" id="Projects">
+						<BookShelf data={shelfData['Projects']}></BookShelf>
+					</div>
 				</div>
 			{/snippet}
 		</ZoomPanCanvas>
@@ -343,14 +447,105 @@
 		width: 100vw;
 		height: 100vh;
 
-		.writings{
+		.canvas-instructions {
+			// position
 			position: absolute;
-			left: 20vw;
+			top: calc((95vh - 800px) / 2 + 100px);
+			left: 50%;
+			transform: translate(-50%, 0%);
+
+			// shape
+			width: 470px;
+
+			// font
+			font-size: 20px;
+
+			// user interaction
+			z-index: -1;
+			user-select: none;
+
+			.pan-instruction {
+				// position
+				position: absolute;
+				top: 0px;
+				left: 0px;
+
+				// shape
+				width: 100%;
+
+				// inner
+				text-align: center;
+			}
+
+			.zoom-instruction {
+				// position
+				position: absolute;
+				top: 30px;
+				left: 0px;
+
+				// shape
+				width: 100%;
+
+				// inner
+				text-align: center;
+			}
 		}
 
-		.projects{
-			position: absolute;
-			right: 20vw;
+		.bookshelves-container {
+			// position
+			position: relative;
+			margin: calc((95vh - 800px) / 2) auto;
+
+			// shape
+			width: 1400px;
+			height: 800px;
+
+			.writings {
+				position: absolute;
+				left: 78px;
+				bottom: 20px;
+			}
+
+			.chair-cover {
+				// shape
+				width: 120px;
+				height: 10px;
+
+				// inner
+				background-color: var(--primary-bg);
+
+				// animation
+				transition: background-color 1s;
+
+				// user interaction
+				z-index: 1;
+			}
+
+			.chair-cover1 {
+				// position
+				position: absolute;
+				left: 499px;
+				bottom: 125px;
+			}
+
+			.chair-cover2 {
+				// position
+				position: absolute;
+				left: 783px;
+				bottom: 125px;
+			}
+
+			.chair {
+				position: absolute;
+				left: 529px;
+				bottom: 122px;
+			}
+
+			.projects {
+				position: absolute;
+				right: 202px;
+				bottom: 79px;
+			}
 		}
 	}
 </style>

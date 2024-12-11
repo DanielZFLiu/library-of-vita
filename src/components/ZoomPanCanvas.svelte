@@ -13,7 +13,9 @@
 		content,
 		position = $bindable(),
 		scale = $bindable(),
-		trigger = $bindable()
+		trigger = $bindable(),
+		onPan = () => {},
+		onZoom = () => {}
 	}: {
 		upperLimit?: number;
 		lowerLimit?: number;
@@ -21,6 +23,8 @@
 		position: Point;
 		scale: number;
 		trigger?: boolean;
+		onPan?: Function;
+		onZoom?: Function
 	} = $props();
 
 	let isCtrlPressed: boolean = false;
@@ -40,12 +44,12 @@
 
 	$effect(() => {
 		if (trigger) {
-			canvas.style.transition = 'transform 3s';
+			canvas.style.transition = 'transform 1s';
 			console.log('triggered');
 			setTimeout(() => {
 				canvas.style.transition = 'none';
 				trigger = false;
-			}, 3500);
+			}, 1000);
 		}
 	});
 
@@ -64,6 +68,7 @@
 	function onWheel(event: WheelEvent) {
 		if (isCtrlPressed && !trigger) {
 			event.preventDefault();
+			onZoom();
 			const delta = event.deltaY < 0 ? 1.1 : 0.9;
 			const mouseX = event.clientX;
 			const mouseY = event.clientY;
@@ -83,8 +88,9 @@
 	}
 
 	function onMouseDown(event: MouseEvent) {
-		if (event.button === 1) {
+		if (event.button === 1 || event.button === 2) {
 			event.preventDefault();
+			onPan();
 			isPanning = true;
 			startPoint = { x: event.clientX, y: event.clientY };
 			panStart = { x: position.x, y: position.y };
@@ -102,7 +108,7 @@
 	}
 
 	function onMouseUp(event: MouseEvent) {
-		if (event.button === 1) {
+		if (event.button === 1 || event.button === 2) {
 			event.preventDefault();
 			isPanning = false;
 		}
@@ -119,6 +125,7 @@
 <div
 	class="viewport {isPanning ? 'panning' : ''}"
 	onwheel={onWheel}
+	oncontextmenu={(e)=>{e.preventDefault()}}
 	onmousedown={onMouseDown}
 	onmousemove={onMouseMove}
 	onmouseup={onMouseUp}
