@@ -178,10 +178,10 @@
 	<div class="zoom-pan-container">
 		<ZoomPanCanvas bind:position bind:scale bind:trigger>
 			{#snippet content()}
-				<div class="writings">
+				<div class="writings" in:blur={{delay: 500, duration: 500}}>
 					<BookShelf data={shelfData['Writings']}></BookShelf>
 				</div>
-				<div class="projects">
+				<div class="projects" in:blur={{delay: 500, duration: 500}}>
 					<BookShelf data={shelfData['Projects']}></BookShelf>
 				</div>
 			{/snippet}

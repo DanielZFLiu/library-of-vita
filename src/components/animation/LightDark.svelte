@@ -6,7 +6,9 @@
 
 {#key lightMode}
 	<div class="darkness-container">
-		<Parametric
+
+		<div class="circle" style="background-color: {lightMode? "#1b1b1b" : "#fffff0"};">
+			<Parametric
 			animationName="darkness"
 			paramStart={0}
 			paramEnd={111}
@@ -19,7 +21,7 @@
 			strokeColor={lightMode? "#fffff0" : "#1b1b1b"}
 		/>
 
-		<div class="circle" style="background-color: {lightMode? "#1b1b1b" : "#fffff0"};"></div>
+		</div>
 	</div>
 {/key}
 
@@ -39,9 +41,6 @@
 
 		/* user interaction */
 		z-index: 1;
-
-		/* animation */
-		animation: fadeOut 0.5s 3.5s forwards;
 	}
 
 	.circle {
@@ -60,7 +59,14 @@
 		z-index: -1;
 
 		/* animation */
-		animation: circle 4.3s forwards, fadeIn 0.5s forwards;
+		animation: circle 4.35s forwards, fadeIn 0.5s forwards, fadeOut 0.5s 3.7s forwards;;
+
+		/* inner */
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		overflow: hidden;
 	}
 
 	@keyframes circle {
