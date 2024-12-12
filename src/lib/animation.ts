@@ -104,34 +104,6 @@ function radiantBookGenerator(progression: number, param: number): { x: number; 
     }
 }
 
-function triangleGenerator(progression: number, param: number): { x: number; y: number } {
-    // Ensure param is not zero to avoid degenerate triangle
-    if (param === 0) param = 1;
-
-    let t = progression;
-    let x: number, y: number;
-
-    if (t < 1/3) {
-        // Top (0, param) to Left (-param, -param)
-        const fraction = t / (1/3); // maps [0,1/3] to [0,1]
-        x = 0 + (-param - 0) * fraction;      // from 0 to -param
-        y = param + (-param - param) * fraction; // from param down to -param
-        // y starts at param and goes to -param
-    } else if (t < 2/3) {
-        // Left (-param, -param) to Right (param, -param)
-        const fraction = (t - 1/3) / (1/3); // maps [1/3,2/3] to [0,1]
-        x = -param + (param - (-param)) * fraction;  // from -param to param
-        y = -param;                                  // stays at -param
-    } else {
-        // Right (param, -param) to Top (0, param)
-        const fraction = (t - 2/3) / (1/3); // maps [2/3,1] to [0,1]
-        x = param + (0 - param) * fraction;    // from param back to 0
-        y = -param + (param - (-param)) * fraction; // from -param back up to param
-    }
-
-    return { x, y };
-}
-
 export let animationMetadata = {
     flower: {
         generator: flowerGenerator,
@@ -159,10 +131,6 @@ export let animationMetadata = {
     },
     radiantBook: {
         generator: radiantBookGenerator,
-        viewBox: "-5 -5 10 10"
-    },
-    triangle: {
-        generator: triangleGenerator,
         viewBox: "-5 -5 10 10"
     }
 }
