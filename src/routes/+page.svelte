@@ -1,9 +1,16 @@
+<!-- 
+TODO
+1. create blog page
+2. responsiveness update
+3. update readme
+4. add instruction to click on books 
+-->
 <script lang="ts">
 	import Parametric from '$components/animation/Parametric.svelte';
 	import BookShelf from '$components/book/BookShelf.svelte';
 	import ZoomPanCanvas from '$components/ZoomPanCanvas.svelte';
 	import { cubicIn } from 'svelte/easing';
-	import { blur, fade, fly } from 'svelte/transition';
+	import { blur, fly } from 'svelte/transition';
 	import { shelfData } from '$lib/ShelfData.svelte';
 	import Zooming from '$components/animation/Zooming.svelte';
 	import { onMount } from 'svelte';
@@ -46,6 +53,7 @@
 			setTimeout(() => {
 				animationStage = 2;
 				window.addEventListener('wheel', finishInitialAnimation);
+				window.addEventListener('touchmove', finishInitialAnimation);
 			}, 10000)
 		);
 
@@ -70,6 +78,7 @@
 		animationStage = 3;
 		localStorage.setItem('playedAnimation', 'true');
 		window.removeEventListener('wheel', finishInitialAnimation);
+		window.removeEventListener('touchmove', finishInitialAnimation);
 		window.removeEventListener('keydown', skipAnimation);
 	}
 
