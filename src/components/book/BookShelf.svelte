@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Component } from 'svelte';
 
-	let { data }: { data: bookshelf } = $props();
+	let { data, bookClick }: { data: bookshelf, bookClick: ()=>void } = $props();
 	interface bookshelf {
 		shelves: Array<shelf>;
 		svg: Component;
@@ -28,6 +28,7 @@
 
 	function onBookClick(link: string) {
 		window.open(link, '_blank');
+		bookClick();
 	}
 
 	const BookshelfBg = $derived(data.svg);

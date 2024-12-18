@@ -142,7 +142,7 @@
     .canvas-instructions {
         // position
         position: absolute;
-        top: calc((95vh - 800px) / 2 + 100px);
+        top: calc((95vh - 800px) / 2 + 70px);
         left: 50%;
         transform: translate(-50%, 0%);
 
@@ -173,6 +173,19 @@
             // position
             position: absolute;
             top: 30px;
+            left: 0px;
+
+            // shape
+            width: 100%;
+
+            // inner
+            text-align: center;
+        }
+
+        .book-instruction {
+            // position
+            position: absolute;
+            top: 60px;
             left: 0px;
 
             // shape

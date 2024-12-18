@@ -1,5 +1,6 @@
 /**
  * Text (plaintext | markdown | latex) to HTML
+ * also supports footnote, code highlight, and internal links
  * Author: Daniel (DanielZFLiu)
  */
 
@@ -76,8 +77,9 @@ function renderLatex(text: string): string {
 // ==============================
 // Render Markdown
 // ==============================
+
 function getMarked(): Marked {
-    return new Marked(
+    const md = new Marked(
         markedHighlight({
             langPrefix: 'hljs language-',
             highlight(code, lang, info) {
@@ -85,35 +87,83 @@ function getMarked(): Marked {
                 return hljs.highlight(code, { language }).value;
             }
         })
-    ).use(markedFootnote({
+    )
+
+    md.use(markedFootnote({
         prefixId: `footnote-${uuidv4()}`
     }));
+
+    // an extension to support headings with {#custom-id}
+    // e.g. `# Heading text {#my-id}`
+    // will convert to <h1 id="my-id">Heading text</h1>
+    md.use({
+        tokenizer: {
+            heading(src) {
+                // matches headings with {#custom-id} at the end
+                const rule = /^(#{1,6})\s+(.*?)\s*\{#([\w-]+)\}\s*(?:\n|$)/;
+                const match = rule.exec(src);
+                if (match) {
+                    const [raw, hashes, text, id] = match;
+                    return {
+                        type: 'heading',
+                        raw,
+                        depth: hashes.length,
+                        text,
+                        tokens: this.lexer.inlineTokens(text),
+                        id
+                    };
+                }
+                return false; // fall back to default behavior if no match
+            }
+        },
+        renderer: {
+            heading(token) {
+                // use the extracted id if available
+                const text = this.parser.parseInline(token.tokens);
+                // @ts-ignore
+                const id = token.id || text.toLowerCase().replace(/[^\w]+/g, '-');
+                return `<h${token.depth} id="${id}">${text}</h${token.depth}>\n`;
+            }
+        }
+    });
+
+    return md;
 }
 
 // ==============================
 // Additional Styling
 // ==============================
 function injectInlineStyles(html: string): string {
-    const styles = {
-        'table': 'border: 1px solid var(--primary-contrast); border-collapse: collapse;',
-        'tr': 'border: 1px solid var(--primary-contrast);',
-        'th, td': 'border: 1px solid var(--primary-contrast); padding: 5px;',
-        'code': 'font-family: monospace; border-radius: 5px; font-size: 1em;',
-        '.katex-html': 'display: inline-block'
-    };
-
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, 'text/html');
 
-    Object.entries(styles).forEach(([selector, style]) => {
-        doc.querySelectorAll(selector).forEach(element => {
-            // @ts-ignore
-            element.style.cssText += style;
-        });
+    const elements = doc.querySelectorAll('table, tr, th, td, code, .katex-html');
+
+    elements.forEach(element => {
+        switch (element.tagName.toLowerCase()) {
+            case 'table':
+                element.setAttribute('style', (element.getAttribute('style') || '') + 'border: 1px solid var(--primary-contrast); border-collapse: collapse;');
+                break;
+            case 'tr':
+                element.setAttribute('style', (element.getAttribute('style') || '') + 'border: 1px solid var(--primary-contrast);');
+                break;
+            case 'th':
+            case 'td':
+                element.setAttribute('style', (element.getAttribute('style') || '') + 'border: 1px solid var(--primary-contrast); padding: 5px;');
+                break;
+            case 'code':
+                element.setAttribute('style', (element.getAttribute('style') || '') + 'font-family: monospace; border-radius: 5px; font-size: 1em;');
+                break;
+        }
+
+        if (element.classList.contains('katex-html')) {
+            element.setAttribute('style', (element.getAttribute('style') || '') + 'display: inline-block;');
+        }
     });
 
     return doc.body.innerHTML;
 }
+
 
 export async function renderText(text: string): Promise<string> {
     let renderedText = renderLatex(text);
@@ -124,11 +174,11 @@ export async function renderText(text: string): Promise<string> {
 /**
  * example usage
 <script>
-	import { renderText } from '$lib/renderer';
+    import { renderText } from '$lib/renderer';
     
-	let content = $state('');
-	let renderedContent = $state('');
-	$effect(() => {
+    let content = $state('');
+    let renderedContent = $state('');
+    $effect(() => {
         renderText(content).then((result) => {
             renderedContent = result;
         });

@@ -2,7 +2,7 @@
 TODO
 1. create blog page
 2. responsiveness update
-3. update readme
+3. update readme [v]
 4. add instruction to click on books 
 5. check in google search console for seo
 -->
@@ -33,8 +33,47 @@ TODO
 	let panned = $state(false);
 	let zoomed = $state(false);
 	let navAnimationPlaying = $state(false);
+	let viewportWidth = 0;
+	let viewportHeight = 0;
+	let isTouchScreen = false;
+	let bookClicked = $state(false);
+	let skipAnimationInstruction = $state("Press Enter to Skip");
+	let panInstruction = $state('(Press scroll key or right click) + drag to pan.');
+	let zoomInstruction = $state('Ctrl + scroll to zoom.');
+	let bookInstruction = $state('Click on a book to open it.');
 
 	onMount(() => {
+		// animation
+		playAnimation();
+
+		// detect colour scheme
+		document.documentElement.style.setProperty('color-scheme', lightMode ? 'light' : 'dark');
+
+		// check if need to show pan / zoom instructions
+		if (localStorage.getItem('panned') === 'true') {
+			panned = true;
+		}
+
+		if (localStorage.getItem('zoomed') === 'true') {
+			zoomed = true;
+		}
+
+		if(localStorage.getItem('bookClicked') === 'true'){
+			bookClicked = true;
+		}
+
+		// viewport detection
+		viewportDetection();
+
+		// cleanup when component is destroyed
+		return () => {
+			window.removeEventListener('resize', updateSize);
+		};
+	});
+
+	// #region animation
+
+	function playAnimation() {
 		// check if the animation has been played before
 		if (localStorage.getItem('playedAnimation') === 'true') {
 			showSkipInstructions = true;
@@ -62,18 +101,7 @@ TODO
 		if (localStorage.getItem('lightMode') === 'true') {
 			lightMode = true;
 		}
-
-		document.documentElement.style.setProperty('color-scheme', lightMode ? 'light' : 'dark');
-
-		// check if need to show pan / zoom instructions
-		if (localStorage.getItem('panned') === 'true') {
-			panned = true;
-		}
-
-		if (localStorage.getItem('zoomed') === 'true') {
-			zoomed = true;
-		}
-	});
+	}
 
 	function finishInitialAnimation() {
 		animationStage = 3;
@@ -119,6 +147,26 @@ TODO
 		};
 	}
 
+	// #endregion
+
+	// #region instructions
+	function onPan() {
+		panned = true;
+		localStorage.setItem('panned', 'true');
+	}
+
+	function onZoom() {
+		zoomed = true;
+		localStorage.setItem('zoomed', 'true');
+	}
+
+	function onBookClick() {
+		bookClicked = true;
+		localStorage.setItem('bookClicked', 'true');
+	}
+	// #endregion
+
+	// #region navbar
 	function navbarClick(item: string) {
 		// check if nav animation is playing
 		if (navAnimationPlaying) return;
@@ -171,16 +219,32 @@ TODO
 			goToItem(item);
 		}
 	}
+	// #endregion
 
-	function onPan() {
-		panned = true;
-		localStorage.setItem('panned', 'true');
+	// #region viewport
+
+	// update viewport size
+	function updateSize() {
+		viewportWidth = window.innerWidth;
+		viewportHeight = window.innerHeight;
 	}
 
-	function onZoom() {
-		zoomed = true;
-		localStorage.setItem('zoomed', 'true');
+	function viewportDetection() {
+		// init size
+		updateSize();
+
+		// listen for resize events
+		window.addEventListener('resize', updateSize);
+
+		// detect touch capability
+		if ('maxTouchPoints' in navigator && navigator.maxTouchPoints > 0) {
+			isTouchScreen = true;
+		} else {
+			isTouchScreen = false;
+		}
 	}
+
+	// #endregion
 </script>
 
 <!-- skip animation instructions -->
@@ -190,7 +254,7 @@ TODO
 		in:blur={{ delay: 500, duration: 1000 }}
 		out:blur={{ duration: 750 }}
 	>
-		<p>Press Enter to Skip</p>
+		<p>{skipAnimationInstruction}</p>
 	</div>
 {/if}
 
@@ -215,7 +279,7 @@ TODO
 		</Zooming>
 	</div>
 
-	<!-- animation stage 1: title animation -->
+<!-- animation stage 1: title animation -->
 {:else if animationStage == 1 || animationStage == 2}
 	<div class="logo" out:fly={{ y: -40, duration: 1000 }}>
 		<Parametric
@@ -264,13 +328,15 @@ TODO
 	<div class="zoom-pan-container">
 		<div class="canvas-instructions" in:blur={{ delay: 500, duration: 500 }}>
 			{#if !panned}
-				<div class="pan-instruction" out:blur={{ duration: 500 }}>
-					(Press scroll key or right click) & drag to pan.
-				</div>
+				<div class="pan-instruction" out:blur={{ duration: 500 }}>{panInstruction}</div>
 			{/if}
 			<br />
 			{#if !zoomed}
-				<div class="zoom-instruction" out:blur={{ duration: 500 }}>Ctrl + scroll to zoom.</div>
+				<div class="zoom-instruction" out:blur={{ duration: 500 }}>{zoomInstruction}</div>
+			{/if}
+			<br />
+			{#if !bookClicked}
+				<div class="book-instruction" out:blur={{duration: 500}}>{bookInstruction}</div>
 			{/if}
 		</div>
 
@@ -278,7 +344,7 @@ TODO
 			{#snippet content()}
 				<div class="bookshelves-container" in:blur={{ delay: 500, duration: 500 }}>
 					<div class="writings" id="Writings">
-						<BookShelf data={shelfData['Writings']}></BookShelf>
+						<BookShelf data={shelfData['Writings']} bookClick={onBookClick}></BookShelf>
 					</div>
 
 					<div class="chair-cover1 chair-cover"></div>
@@ -290,7 +356,7 @@ TODO
 					<div class="chair-cover2 chair-cover"></div>
 
 					<div class="projects" id="Projects">
-						<BookShelf data={shelfData['Projects']}></BookShelf>
+						<BookShelf data={shelfData['Projects']} bookClick={onBookClick}></BookShelf>
 					</div>
 				</div>
 			{/snippet}
