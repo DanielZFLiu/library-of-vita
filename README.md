@@ -5,7 +5,7 @@ Personal Blog &amp; Profile. Feel free to reuse or expand upon the code, just ma
 ## Renderer
 - lib/renderer.ts
 
-A ts script for translating text (plaintext | markdown | latex) to HTML, particularly useful for blog posts or displaying LLM results. It also keeps any html tags originally in the text; for example you can render images using <img src=..../>. 
+A ts script for translating text (plaintext | markdown | latex) to HTML, particularly useful for blog posts or displaying LLM results. It also keeps any html tags originally in the text; for example you can render images using the img html tag. Also supports footnote, code highlight, and internal links.
 
 ## Simple Parametric Animation
 - lib/animation.ts
@@ -16,7 +16,7 @@ A simple framework that animate parametric equations by gradually changing one p
 ## ZoomPanCanvas
 - components/ZoomPanCanvas
 
-A container that allows zooming and panning (for keyboards/mouse & touchscreen). Just pass in the content snippets (slot in svelte 4) to display components inside the canvas. If you want to zoom in/out to a specific position and the scale via code, you can set trigger to true, in which case the canvas will zoom in/out to your desired location. You can also pass in the callback function onPan and onZoom, which triggers, as you guessed, on pan and on zoom.
+A container that allows zooming and panning (for keyboards/mouse & touchscreen). Just pass in the content snippets (slot in svelte 4) to display components inside the canvas. If you want to zoom in/out to a specific position and the scale via code, you can set trigger to true, in which case the canvas will zoom in/out to your desired location. You can also pass in the callback function onPan and onZoom, which triggers, as you guessed, on pan and on zoom. Touch screen friendly.
 
 ## Bookshelf system
 - components/book/Bookshelf.svelte
