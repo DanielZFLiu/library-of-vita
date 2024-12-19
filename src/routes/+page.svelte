@@ -33,14 +33,17 @@ TODO
 	let panned = $state(false);
 	let zoomed = $state(false);
 	let navAnimationPlaying = $state(false);
-	let viewportWidth = 0;
+	let viewportWidth = $state(0);
 	let viewportHeight = 0;
 	let isTouchScreen = false;
 	let bookClicked = $state(false);
-	let skipAnimationInstruction = $state("Press Enter to Skip");
+	let skipAnimationInstruction = $state('Press Enter to Skip');
 	let panInstruction = $state('(Press scroll key or right click) + drag to pan.');
 	let zoomInstruction = $state('Ctrl + scroll to zoom.');
 	let bookInstruction = $state('Click on a book to open it.');
+	let logoWidth = $state("50vw");
+	let logoHeight = $state("40vw");
+
 
 	onMount(() => {
 		// animation
@@ -58,7 +61,7 @@ TODO
 			zoomed = true;
 		}
 
-		if(localStorage.getItem('bookClicked') === 'true'){
+		if (localStorage.getItem('bookClicked') === 'true') {
 			bookClicked = true;
 		}
 
@@ -81,6 +84,7 @@ TODO
 				showSkipInstructions = false;
 			}, 3500);
 			window.addEventListener('keydown', skipAnimation);
+			window.addEventListener('touchstart', skipAnimation);
 		}
 
 		// start the animation
@@ -109,10 +113,11 @@ TODO
 		window.removeEventListener('wheel', finishInitialAnimation);
 		window.removeEventListener('touchmove', finishInitialAnimation);
 		window.removeEventListener('keydown', skipAnimation);
+		window.removeEventListener('touchstart', skipAnimation);
 	}
 
-	function skipAnimation(event: KeyboardEvent) {
-		if (event.key === 'Enter') {
+	function skipAnimation(event: KeyboardEvent | TouchEvent) {
+		if ((event instanceof KeyboardEvent && event.key === 'Enter') || event instanceof TouchEvent) {
 			for (const timeout of timeouts) {
 				clearTimeout(timeout);
 			}
@@ -227,6 +232,17 @@ TODO
 	function updateSize() {
 		viewportWidth = window.innerWidth;
 		viewportHeight = window.innerHeight;
+
+		if (viewportWidth < 768) {
+			logoWidth = '80vw';
+			logoHeight = '64vw';
+			skipAnimationInstruction = 'Tap to Skip';
+			panInstruction = 'Drag to pan.';
+			zoomInstruction = 'Pinch to zoom.';
+		} else {
+			logoWidth = '50vw';
+			logoHeight = '40vw';
+		}
 	}
 
 	function viewportDetection() {
@@ -239,6 +255,9 @@ TODO
 		// detect touch capability
 		if ('maxTouchPoints' in navigator && navigator.maxTouchPoints > 0) {
 			isTouchScreen = true;
+			skipAnimationInstruction = 'Tap to Skip';
+			panInstruction = 'Drag to pan.';
+			zoomInstruction = 'Pinch to zoom.';
 		} else {
 			isTouchScreen = false;
 		}
@@ -279,7 +298,7 @@ TODO
 		</Zooming>
 	</div>
 
-<!-- animation stage 1: title animation -->
+	<!-- animation stage 1: title animation -->
 {:else if animationStage == 1 || animationStage == 2}
 	<div class="logo" out:fly={{ y: -40, duration: 1000 }}>
 		<Parametric
@@ -289,8 +308,8 @@ TODO
 			strokeWidth={0.02}
 			bgColor={'var(--primary-bg)'}
 			strokeColor={'var(--primary-contrast)'}
-			width={'50vw'}
-			height={'40vw'}
+			width={logoWidth}
+			height={logoHeight}
 			resoluton={5000}
 			duration={4000}
 		/>
@@ -322,21 +341,27 @@ TODO
 
 {#if animationStage == 3}
 	{#if showDarknessAnimation}
-		<LightDark {lightMode}></LightDark>
+		<LightDark {lightMode} {viewportWidth}></LightDark>
 	{/if}
 
 	<div class="zoom-pan-container">
 		<div class="canvas-instructions" in:blur={{ delay: 500, duration: 500 }}>
 			{#if !panned}
-				<div class="pan-instruction" out:blur={{ duration: 500 }}>{panInstruction}</div>
+				<div class="pan-instruction" out:blur={{ duration: 500 }}>
+					{panInstruction}
+				</div>
 			{/if}
 			<br />
 			{#if !zoomed}
-				<div class="zoom-instruction" out:blur={{ duration: 500 }}>{zoomInstruction}</div>
+				<div class="zoom-instruction" out:blur={{ duration: 500 }}>
+					{zoomInstruction}
+				</div>
 			{/if}
 			<br />
 			{#if !bookClicked}
-				<div class="book-instruction" out:blur={{duration: 500}}>{bookInstruction}</div>
+				<div class="book-instruction" out:blur={{ duration: 500 }}>
+					{bookInstruction}
+				</div>
 			{/if}
 		</div>
 

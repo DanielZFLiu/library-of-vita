@@ -1,26 +1,34 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import Parametric from './Parametric.svelte';
 
-	let { lightMode = false }: { lightMode?: boolean } = $props();
+	let { lightMode = false, viewportWidth }: { lightMode?: boolean; viewportWidth: number } =
+		$props();
+
+	let darknessHeight = $state('30vw');
+
+	onMount(() => {
+		if (viewportWidth < 768) {
+			darknessHeight = '50vw';
+		}
+	});
 </script>
 
 {#key lightMode}
 	<div class="darkness-container">
-
-		<div class="circle" style="background-color: {lightMode? "#1b1b1b" : "#fffff0"};">
+		<div class="circle" style="background-color: {lightMode ? '#1b1b1b' : '#fffff0'};">
 			<Parametric
-			animationName="darkness"
-			paramStart={0}
-			paramEnd={111}
-			strokeWidth={0.001}
-			width={'30vw'}
-			height={'30vw'}
-			resoluton={8000}
-			duration={4000}
-			bgColor={'none'}
-			strokeColor={lightMode? "#fffff0" : "#1b1b1b"}
-		/>
-
+				animationName="darkness"
+				paramStart={0}
+				paramEnd={111}
+				strokeWidth={0.001}
+				width={darknessHeight}
+				height={darknessHeight}
+				resoluton={8000}
+				duration={4000}
+				bgColor={'none'}
+				strokeColor={lightMode ? '#fffff0' : '#1b1b1b'}
+			/>
 		</div>
 	</div>
 {/key}
@@ -59,7 +67,10 @@
 		z-index: -1;
 
 		/* animation */
-		animation: circle 4.35s forwards, fadeIn 0.5s forwards, fadeOut 0.5s 3.7s forwards;;
+		animation:
+			circle 4.35s forwards,
+			fadeIn 0.5s forwards,
+			fadeOut 0.5s 3.7s forwards;
 
 		/* inner */
 		display: flex;
