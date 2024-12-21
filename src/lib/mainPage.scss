@@ -30,11 +30,17 @@
 	// shape
 	height: min-content;
 
-	border: solid 1px red;
-
 	@include respond-to(medium) {
 		font-size: 16px;
 	}
+}
+
+.portal-animation {
+	// position
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 }
 
 .logo {

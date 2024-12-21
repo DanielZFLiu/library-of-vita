@@ -297,7 +297,7 @@ TODO
 
 <!-- animation stage 0: portal & zooming -->
 {#if animationStage == 0}
-	<div style="position: absolute; border: solid 3px red" out:blur={{ duration: 500 }}>
+	<div class="portal-animation" out:blur={{ duration: 500 }}>
 		<Zooming>
 			{#snippet content()}
 				<Parametric
