@@ -6,17 +6,23 @@
 		$props();
 
 	let darknessHeight = $state('30vw');
+	let circleSize = $state('200vw');
 
 	onMount(() => {
 		if (viewportWidth < 768) {
 			darknessHeight = '50vw';
+			circleSize = '150vh';
 		}
 	});
 </script>
 
 {#key lightMode}
 	<div class="darkness-container">
-		<div class="circle" style="background-color: {lightMode ? '#1b1b1b' : '#fffff0'};">
+		<div class="circle" 
+			style="background-color: {lightMode ? '#1b1b1b' : '#fffff0'};
+					width: {circleSize};
+					height: {circleSize};"
+		>
 			<Parametric
 				animationName="darkness"
 				paramStart={0}
@@ -42,6 +48,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		overflow: hidden;
 
 		/* shape */
 		width: 100vw;
@@ -59,8 +66,6 @@
 		transform: translate(-50%, -50%);
 
 		/* shape */
-		width: 200vw;
-		height: 200vw;
 		border-radius: 50%;
 
 		/* user interaction */
@@ -82,8 +87,6 @@
 
 	@keyframes circle {
 		0% {
-			width: 200vw;
-			height: 200vw;
 		}
 
 		100% {

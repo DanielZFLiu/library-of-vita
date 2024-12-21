@@ -1,290 +1,294 @@
 @mixin respond-to($breakpoint) {
-    @if $breakpoint ==small {
-        @media (min-width: 480px) {
-            @content;
-        }
-    }
-
-    @else if $breakpoint ==medium {
-        @media (min-width: 768px) {
-            @content;
-        }
-    }
-
-    @else if $breakpoint ==large {
-        @media (min-width: 1024px) {
-            @content;
-        }
-    }
+	@if $breakpoint ==small {
+		@media (min-width: 480px) {
+			@content;
+		}
+	} @else if $breakpoint ==medium {
+		@media (min-width: 768px) {
+			@content;
+		}
+	} @else if $breakpoint ==large {
+		@media (min-width: 1024px) {
+			@content;
+		}
+	}
 }
 
 .skip-instructions {
-    // position
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+	// position
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 
-    // user interaction
-    z-index: 1;
+	// user interaction
+	z-index: 1;
 
-    // font
-    font-size: 10px;
+	// font
+	font-size: 10px;
 
-    @include respond-to(medium) {
-        font-size: 16px;
-    }
+	@include respond-to(medium) {
+		font-size: 16px;
+	}
 }
 
 .logo {
-    // position
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+	// position
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 
-    // animation
-    animation: fadeIn 1s forwards;
+	// animation
+	animation: fadeIn 1s forwards;
 }
 
 .title {
-    // position
-    position: absolute;
-    top: 49.5%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+	// position
+	position: absolute;
+	top: 49.5%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 
-    // inner
-    opacity: 0;
-    user-select: none;
+	// inner
+	opacity: 0;
+	user-select: none;
 
-    // shape
-    width: max-content;
+	// shape
+	width: max-content;
 
-    // animation
-    animation: fadeIn 1s 4.2s forwards;
+	// animation
+	animation: fadeIn 1s 4.2s forwards;
 
-    // font
-    font-size: 8.5vw;
-    font-weight: 400;
+	// font
+	font-size: 8.5vw;
+	font-weight: 400;
 
-    @include respond-to(medium) {
-        top: 49%;
-        font-size: 6.5vw;
-    }
+	@include respond-to(medium) {
+		top: 49%;
+		font-size: 6.5vw;
+	}
 }
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
+	from {
+		opacity: 0;
+	}
 
-    to {
-        opacity: 1;
-    }
+	to {
+		opacity: 1;
+	}
 }
 
 .arrow {
-    // position
-    position: absolute;
-    top: 77%;
-    left: 50%;
+	// position
+	position: absolute;
+	top: 77%;
+	left: 50%;
 
-    // shape
-    transform: translate(-50%, -50%);
-    transform: rotate(0deg);
-
-    // user interaction
-    cursor: pointer;
+	// shape
+	transform: translate(-50%, -50%);
+	transform: rotate(0deg);
 }
 
 .arrow span {
-    // shape
-    display: block;
-    width: 20px;
-    height: 20px;
-    border-bottom: 2px solid var(--primary-contrast);
-    border-right: 2px solid var(--primary-contrast);
-    border-bottom-right-radius: 3px;
-    transform: rotate(45deg);
+	// shape
+	display: block;
+	width: 20px;
+	height: 20px;
+	border-bottom: 2px solid var(--primary-contrast);
+	border-right: 2px solid var(--primary-contrast);
+	border-bottom-right-radius: 3px;
+	transform: rotate(45deg);
 
-    // position
-    margin: -10px;
+	// position
+	margin: -10px;
 
-    // animation
-    animation: animate 2s forwards;
+	// animation
+	animation: animate 2s forwards;
 }
 
 .arrow span:nth-child(2) {
-    animation-delay: -0.2s;
+	animation-delay: -0.2s;
 }
 
 .arrow span:nth-child(3) {
-    animation-delay: -0.4s;
+	animation-delay: -0.4s;
 }
 
 @keyframes animate {
-    0% {
-        opacity: 0;
-        transform: rotate(45deg) translate(-20px, -20px);
-    }
+	0% {
+		opacity: 0;
+		transform: rotate(45deg) translate(-20px, -20px);
+	}
 
-    50% {
-        opacity: 1;
-    }
+	50% {
+		opacity: 1;
+	}
 
-    100% {
-        opacity: 0;
-        transform: rotate(45deg) translate(20px, 20px);
-    }
+	100% {
+		opacity: 0;
+		transform: rotate(45deg) translate(20px, 20px);
+	}
 }
 
 .theme-button {
-    // position
-    position: absolute;
-    bottom: 12px;
-    right: 15px;
+	// position
+	position: absolute;
+	bottom: 12px;
+	right: 15px;
 
-    // user interaction
-    cursor: pointer;
+	// user interaction
+	cursor: pointer;
 }
 
 .navbar {
-    // position
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translate(-50%, 0%);
+	// position
+	position: absolute;
+	top: 0;
+	left: 50%;
+	transform: translate(-50%, 0%);
 
-    // inner
-    display: flex;
+	// inner
+	display: flex;
 
-    // font
-    font-size: 18px;
+	// font
+	font-size: 18px;
 
-    // user interaction
-    user-select: none;
+	// user interaction
+	user-select: none;
 
-    button {
-        cursor: pointer;
-    }
+	button {
+		cursor: pointer;
+	}
 }
 
 .zoom-pan-container {
-    width: 100vw;
-    height: 100vh;
+	width: 100vw;
+	height: 100vh;
 
-    .canvas-instructions {
-        // position
-        position: absolute;
-        top: calc((95vh - 800px) / 2 + 120px);
-        left: 50%;
-        transform: translate(-50%, 0%);
+	margin: 0;
 
-        // shape
-        width: 470px;
+	// border: solid 5px red;
 
-        // font
-        font-size: 16px;
+	.canvas-instructions {
+		// border: solid 5px blue;
 
-        // user interaction
-        z-index: -1;
-        user-select: none;
+		// position
+		position: absolute;
+		top: calc((95vh - 800px) / 2 + 100px);
+		left: 50%;
+		transform: translate(-50%, 0%);
 
-        .pan-instruction {
-            // position
-            position: absolute;
-            top: 0px;
-            left: 0px;
+		// font
+		font-size: 16px;
 
-            // shape
-            width: 100%;
+		// user interaction
+		z-index: -1;
+		user-select: none;
 
-            // inner
-            text-align: center;
-        }
+		// shape
+		width: 100vw;
 
-        .zoom-instruction {
-            // position
-            position: absolute;
-            top: 30px;
-            left: 0px;
+		@include respond-to(medium) {
+			width: 470px;
+			top: calc((95vh - 800px) / 2 + 120px);
+		}
 
-            // shape
-            width: 100%;
+		.pan-instruction {
+			// position
+			position: absolute;
+			top: 0px;
+			left: 0px;
 
-            // inner
-            text-align: center;
-        }
+			// shape
+			width: 100%;
 
-        .book-instruction {
-            // position
-            position: absolute;
-            top: 60px;
-            left: 0px;
+			// inner
+			text-align: center;
+		}
 
-            // shape
-            width: 100%;
+		.zoom-instruction {
+			// position
+			position: absolute;
+			top: 30px;
+			left: 0px;
 
-            // inner
-            text-align: center;
-        }
-    }
+			// shape
+			width: 100%;
 
-    .bookshelves-container {
-        // position
-        position: relative;
-        margin: calc((95vh - 800px) / 2) auto;
+			// inner
+			text-align: center;
+		}
 
-        // shape
-        width: 1400px;
-        height: 800px;
+		.book-instruction {
+			// position
+			position: absolute;
+			top: 60px;
+			left: 0px;
 
-        .writings {
-            position: absolute;
-            left: 78px;
-            bottom: 20px;
-        }
+			// shape
+			width: 100%;
 
-        .chair-cover {
-            // shape
-            width: 120px;
-            height: 10px;
+			// inner
+			text-align: center;
+		}
+	}
 
-            // inner
-            background-color: var(--primary-bg);
+	.bookshelves-container {
+		// position
+		position: relative;
+		margin: calc((95vh - 800px) / 2) auto;
 
-            // animation
-            transition: background-color 1s;
+		// shape
+		width: 1400px;
+		height: 800px;
 
-            // user interaction
-            z-index: 1;
-        }
+		.writings {
+			position: absolute;
+			left: 78px;
+			bottom: 20px;
+		}
 
-        .chair-cover1 {
-            // position
-            position: absolute;
-            left: 499px;
-            bottom: 125px;
-        }
+		.chair-cover {
+			// shape
+			width: 120px;
+			height: 10px;
 
-        .chair-cover2 {
-            // position
-            position: absolute;
-            left: 783px;
-            bottom: 125px;
-        }
+			// inner
+			background-color: var(--primary-bg);
 
-        .chair {
-            position: absolute;
-            left: 529px;
-            bottom: 122px;
-        }
+			// animation
+			transition: background-color 1s;
 
-        .projects {
-            position: absolute;
-            right: 202px;
-            bottom: 79px;
-        }
-    }
+			// user interaction
+			z-index: 1;
+		}
+
+		.chair-cover1 {
+			// position
+			position: absolute;
+			left: 499px;
+			bottom: 125px;
+		}
+
+		.chair-cover2 {
+			// position
+			position: absolute;
+			left: 783px;
+			bottom: 125px;
+		}
+
+		.chair {
+			position: absolute;
+			left: 529px;
+			bottom: 122px;
+		}
+
+		.projects {
+			position: absolute;
+			right: 202px;
+			bottom: 79px;
+		}
+	}
 }

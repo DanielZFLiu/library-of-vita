@@ -28,6 +28,7 @@
 
 	function onBookClick(link: string) {
 		window.open(link, '_blank');
+		console.log('Book clicked');
 		bookClick();
 	}
 

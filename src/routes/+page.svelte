@@ -21,29 +21,36 @@ TODO
 	import SofaChair from '$components/svg/SofaChair.svelte';
 	import '$lib/mainPage.scss';
 
+	// animation
 	let animationStage = $state(0);
 	let timeouts: number[] = [];
-	let showSkipInstructions = $state(false);
 	let lightMode = $state(false);
 	let showDarknessAnimation = $state(false);
-	let navMode = $state('');
-	let position = $state({ x: 0, y: 0 });
-	let scale = $state(1);
-	let trigger = $state(false);
+	let logoWidth = $state('50vw');
+	let logoHeight = $state('40vw');
+
+	// instructions
+	let showSkipInstructions = $state(false);
+	let bookClicked = $state(false);
 	let panned = $state(false);
 	let zoomed = $state(false);
-	let navAnimationPlaying = $state(false);
-	let viewportWidth = $state(0);
-	let viewportHeight = 0;
-	let isTouchScreen = false;
-	let bookClicked = $state(false);
 	let skipAnimationInstruction = $state('Press Enter to Skip');
 	let panInstruction = $state('(Press scroll key or right click) + drag to pan.');
 	let zoomInstruction = $state('Ctrl + scroll to zoom.');
 	let bookInstruction = $state('Click on a book to open it.');
-	let logoWidth = $state("50vw");
-	let logoHeight = $state("40vw");
 
+	// navbar
+	let navMode = $state('');
+	let position = $state({ x: 0, y: 0 });
+	let scale = $state(1);
+	let trigger = $state(false);
+	let navAnimationPlaying = $state(false);
+	let desiredScale = $state(1.5);
+
+	// viewport
+	let viewportWidth = $state(0);
+	let viewportHeight = 0;
+	let isTouchScreen = false;
 
 	onMount(() => {
 		// animation
@@ -123,6 +130,12 @@ TODO
 			}
 			showSkipInstructions = false;
 			finishInitialAnimation();
+
+			if(viewportWidth < 768) {
+				setTimeout(() => {
+					navbarClick('Writings');
+				}, 1000);
+			}
 		}
 	}
 
@@ -195,8 +208,8 @@ TODO
 			const viewportCenterX = window.innerWidth / 2;
 			const viewportCenterY = window.innerHeight / 2;
 
-			// desired scale
-			scale = 1.5;
+			// set desired scale
+			scale = desiredScale;
 
 			// reposition so the chosen element ends up at the center
 			position = {
@@ -239,9 +252,14 @@ TODO
 			skipAnimationInstruction = 'Tap to Skip';
 			panInstruction = 'Drag to pan.';
 			zoomInstruction = 'Pinch to zoom.';
+			desiredScale = 1;
 		} else {
 			logoWidth = '50vw';
 			logoHeight = '40vw';
+			skipAnimationInstruction = 'Press Enter to Skip';
+			panInstruction = '(Press scroll key or right click) + drag to pan.';
+			zoomInstruction = 'Ctrl + scroll to zoom.';
+			desiredScale = 1.5;
 		}
 	}
 

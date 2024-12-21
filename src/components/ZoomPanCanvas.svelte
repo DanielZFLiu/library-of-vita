@@ -24,7 +24,7 @@
 		scale: number;
 		trigger?: boolean;
 		onPan?: Function;
-		onZoom?: Function
+		onZoom?: Function;
 	} = $props();
 
 	let isCtrlPressed: boolean = false;
@@ -48,7 +48,6 @@
 	$effect(() => {
 		if (trigger) {
 			canvas.style.transition = 'transform 1s';
-			console.log('triggered');
 			setTimeout(() => {
 				canvas.style.transition = 'none';
 				trigger = false;
@@ -116,7 +115,7 @@
 	// touch handlers
 	function onTouchStart(event: TouchEvent) {
 		isTouching = true;
-		event.preventDefault();
+		// event.preventDefault();
 
 		if (event.touches.length === 1) {
 			// single touch: start panning
@@ -134,7 +133,7 @@
 	}
 
 	function onTouchMove(event: TouchEvent) {
-		event.preventDefault();
+		// event.preventDefault();
 
 		if (!trigger) {
 			if (event.touches.length === 1 && isPanning) {
@@ -160,7 +159,7 @@
 	}
 
 	function onTouchEnd(event: TouchEvent) {
-		event.preventDefault();
+		// event.preventDefault();
 		if (event.touches.length === 0) {
 			// all touches ended
 			isTouching = false;
@@ -222,12 +221,13 @@
 <div
 	class="viewport {isPanning ? 'panning' : ''}"
 	onwheel={onWheel}
-	oncontextmenu={(e)=>{e.preventDefault()}}
+	oncontextmenu={(e) => {
+		e.preventDefault();
+	}}
 	onmousedown={onMouseDown}
 	onmousemove={onMouseMove}
 	onmouseup={onMouseUp}
 	onmouseleave={onMouseLeave}
-
 	ontouchstart={onTouchStart}
 	ontouchmove={onTouchMove}
 	ontouchend={onTouchEnd}
@@ -242,13 +242,34 @@
 	</div>
 </div>
 
-<style>
+<style lang="scss">
+	@mixin respond-to($breakpoint) {
+		@if $breakpoint ==small {
+			@media (min-width: 480px) {
+				@content;
+			}
+		} @else if $breakpoint ==medium {
+			@media (min-width: 768px) {
+				@content;
+			}
+		} @else if $breakpoint ==large {
+			@media (min-width: 1024px) {
+				@content;
+			}
+		}
+	}
+
 	.viewport {
-		width: 100%;
-		height: 100%;
+		width: 100vw;
+		height: calc(100vh - 1px);
 		overflow: hidden;
 		position: relative;
 		touch-action: none;
+
+		@include respond-to(medium) {
+			width: 100%;
+			height: 100%;
+		}
 	}
 
 	.content {
