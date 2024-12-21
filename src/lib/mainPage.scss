@@ -30,6 +30,8 @@
 	// shape
 	height: min-content;
 
+	border: solid 1px red;
+
 	@include respond-to(medium) {
 		font-size: 16px;
 	}
