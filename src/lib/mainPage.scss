@@ -27,6 +27,9 @@
 	// font
 	font-size: 10px;
 
+	// shape
+	height: min-content;
+
 	@include respond-to(medium) {
 		font-size: 16px;
 	}

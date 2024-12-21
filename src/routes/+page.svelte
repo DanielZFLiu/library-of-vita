@@ -131,7 +131,7 @@ TODO
 			showSkipInstructions = false;
 			finishInitialAnimation();
 
-			if(viewportWidth < 768) {
+			if (viewportWidth < 768) {
 				setTimeout(() => {
 					navbarClick('Writings');
 				}, 1000);
@@ -291,7 +291,7 @@ TODO
 		in:blur={{ delay: 500, duration: 1000 }}
 		out:blur={{ duration: 750 }}
 	>
-		<p>{skipAnimationInstruction}</p>
+		{skipAnimationInstruction}
 	</div>
 {/if}
 
