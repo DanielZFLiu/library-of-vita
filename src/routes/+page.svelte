@@ -1,10 +1,10 @@
 <!-- 
 TODO
 1. create blog page
-2. responsiveness update
+2. responsiveness update [v]
 3. update readme [v]
-4. add instruction to click on books 
-5. check in google search console for seo
+4. add instruction to click on books [v]
+5. check in google search console for seo [v]
 -->
 <script lang="ts">
 	import Parametric from '$components/animation/Parametric.svelte';

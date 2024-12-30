@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Component } from 'svelte';
 
-	let { data, bookClick }: { data: bookshelf, bookClick: ()=>void } = $props();
+	let { data, bookClick }: { data: bookshelf; bookClick: () => void } = $props();
 	interface bookshelf {
 		shelves: Array<shelf>;
 		svg: Component;
@@ -24,6 +24,7 @@
 		width: number;
 		height: number;
 		link: string;
+		name: string;
 	}
 
 	function onBookClick(link: string) {
@@ -33,6 +34,28 @@
 	}
 
 	const BookshelfBg = $derived(data.svg);
+
+	function showName(event: MouseEvent) {
+		let elementClickedOn = event.target;
+		if (elementClickedOn) {
+			let hoveredElement: HTMLElement = elementClickedOn.getElementsByClassName('bookname')[0];
+			hoveredElement.style.display = 'block';
+			setTimeout(() => {
+				hoveredElement.style.opacity = '0.7';
+			}, 0);
+		}
+	}
+
+	function hideName(event: MouseEvent) {
+		let elementClickedOn = event.target;
+		if (elementClickedOn) {
+			let hoveredElement: HTMLElement = elementClickedOn.getElementsByClassName('bookname')[0];
+			setTimeout(() => {
+				hoveredElement.style.display = 'none';
+			}, 500);
+			hoveredElement.style.opacity = '0';
+		}
+	}
 </script>
 
 {#if data}
@@ -56,6 +79,8 @@
 					<!-- svelte-ignore a11y_click_events_have_key_events -->
 					<div
 						onclick={() => onBookClick(book.link)}
+						onmouseenter={showName}
+						onmouseleave={hideName}
 						class="bookspine"
 						style="width: {book.width}px; height:{book.height}px; 
 							transform: scaleX({shelf.flipped ? -1 : 1});"
@@ -67,6 +92,10 @@
 						{/snippet}
 
 						{@render spine(book.svg, book.width, book.height)}
+
+						<div class="bookname">
+							{book.name}
+						</div>
 					</div>
 				{/each}
 			</div>
@@ -91,6 +120,27 @@
 
 			.bookspine {
 				cursor: pointer;
+				position: relative;
+
+				.bookname {
+					// position
+					position: absolute;
+					top: 0;
+					left: 0;
+					transform: translate(-45%, -100%);
+
+					// shape
+					width: max-content;
+
+					// inner
+					display: none;
+					background-color: var(--primary-bg);
+					opacity: 0;
+					transition: opacity 0.5s;
+
+					// font
+					font-size: 12px;
+				}
 			}
 		}
 	}

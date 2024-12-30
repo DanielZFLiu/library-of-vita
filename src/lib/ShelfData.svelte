@@ -20,13 +20,15 @@
 							link: 'https://www.voithoslabs.com/',
 							svg: VNote,
 							width: 16,
-							height: 67
+							height: 67,
+							name: "VNote: Intelligent Notetaker"
 						},
 						{
 							link: 'https://www.epochdesign.dev/',
 							svg: Epoch,
 							width: 16,
-							height: 60
+							height: 60,
+							name: "Epoch Design & Development"
 						}
 					]
 				}
