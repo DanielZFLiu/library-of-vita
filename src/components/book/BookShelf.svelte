@@ -38,6 +38,7 @@
 	function showName(event: MouseEvent) {
 		let elementClickedOn = event.target;
 		if (elementClickedOn) {
+			// @ts-ignore
 			let hoveredElement: HTMLElement = elementClickedOn.getElementsByClassName('bookname')[0];
 			hoveredElement.style.display = 'block';
 			setTimeout(() => {
@@ -49,6 +50,7 @@
 	function hideName(event: MouseEvent) {
 		let elementClickedOn = event.target;
 		if (elementClickedOn) {
+			// @ts-ignore
 			let hoveredElement: HTMLElement = elementClickedOn.getElementsByClassName('bookname')[0];
 			setTimeout(() => {
 				hoveredElement.style.display = 'none';

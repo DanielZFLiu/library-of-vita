@@ -19,8 +19,8 @@ TODO
 	import Moon from '$components/svg/themeButton/Moon.svelte';
 	import LightDark from '$components/animation/LightDark.svelte';
 	import SofaChair from '$components/svg/SofaChair.svelte';
+	import Librarian from '$components/librarian/Librarian.svelte';
 	import '$lib/mainPage.scss';
-	import Sitting from '$components/svg/librarian/Sitting.svelte';
 
 	// animation
 	let animationStage = $state(0);
@@ -399,9 +399,7 @@ TODO
 
 					<div class="chair-cover2 chair-cover"></div>
 
-					<div class="librarian">
-						<Sitting></Sitting>
-					</div>
+					<Librarian></Librarian>
 
 					<div class="projects" id="Projects">
 						<BookShelf data={shelfData['Projects']} bookClick={onBookClick}></BookShelf>
