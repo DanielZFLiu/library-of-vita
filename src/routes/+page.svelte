@@ -23,7 +23,7 @@ TODO
 	import Sitting from '$components/svg/librarian/Sitting.svelte';
 
 	// animation
-	let animationStage = $state(3);
+	let animationStage = $state(0);
 	let timeouts: number[] = [];
 	let lightMode = $state(false);
 	let showDarknessAnimation = $state(false);
@@ -55,7 +55,7 @@ TODO
 
 	onMount(() => {
 		// animation
-		// playAnimation();
+		playAnimation();
 
 		// detect colour scheme
 		document.documentElement.style.setProperty('color-scheme', lightMode ? 'light' : 'dark');
