@@ -20,9 +20,10 @@ TODO
 	import LightDark from '$components/animation/LightDark.svelte';
 	import SofaChair from '$components/svg/SofaChair.svelte';
 	import '$lib/mainPage.scss';
+	import Sitting from '$components/svg/librarian/Sitting.svelte';
 
 	// animation
-	let animationStage = $state(0);
+	let animationStage = $state(3);
 	let timeouts: number[] = [];
 	let lightMode = $state(false);
 	let showDarknessAnimation = $state(false);
@@ -54,7 +55,7 @@ TODO
 
 	onMount(() => {
 		// animation
-		playAnimation();
+		// playAnimation();
 
 		// detect colour scheme
 		document.documentElement.style.setProperty('color-scheme', lightMode ? 'light' : 'dark');
@@ -397,6 +398,10 @@ TODO
 					</div>
 
 					<div class="chair-cover2 chair-cover"></div>
+
+					<div class="librarian">
+						<Sitting></Sitting>
+					</div>
 
 					<div class="projects" id="Projects">
 						<BookShelf data={shelfData['Projects']} bookClick={onBookClick}></BookShelf>
