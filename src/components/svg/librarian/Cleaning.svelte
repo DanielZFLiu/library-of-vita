@@ -1,7 +1,7 @@
 <script lang="ts">
 	let {
-		width = '200',
-		height = '300',
+		width = '200px',
+		height = '300px',
 		fill = 'var(--primary-contrast)'
 	}: { width?: string; height?: string; fill?: string } = $props();
 </script>

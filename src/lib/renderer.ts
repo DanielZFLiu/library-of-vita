@@ -172,7 +172,7 @@ export async function renderText(text: string): Promise<string> {
 }
 
 /**
- * example usage
+ * example usage in svelte
 <script>
     import { renderText } from '$lib/renderer';
     
